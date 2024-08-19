@@ -1,6 +1,6 @@
 ﻿
 
-using OrdersAndItemsService.Models.OrderEntities;
+using Core.Entities.Order_Entities;
 
 namespace WebApplication1.Controllers
 {
@@ -24,8 +24,17 @@ namespace WebApplication1.Controllers
             else return NotFound();
 
         }
+        public IActionResult CreateOrder(int id, [FromBody] Order newOrder)
+        {
+            var user = _service.GetById(id);
+            if (user == null)
+                return NotFound();
 
-     
+            newOrder.Id = user.orders.Count + 1;
+            user.orders.Add(newOrder);
+            return Ok(newOrder);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Order model)

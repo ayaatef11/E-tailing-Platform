@@ -3,6 +3,6 @@
     public interface IitemRepository
     {
         Task<Item>getItemByIdAsync(int id);
-        Task<IReadOnlyList<Item>> GetItemsAsync();
+         Task<IReadOnlyList<Item>> GetItemsAsync();
     }
 }

@@ -5,12 +5,17 @@ namespace OrdersAndItemsService.Repositories
 {
     public class ItemRepository(AppDbContext _context) : IitemRepository
     {
-       public async Task<Item> IitemRepository.getItemByIdAsync(int id)
+       public async Task<Item>  getItemByIdAsync(int id)
         {
-            return await _context.Items.FirstOrDefault(p => p.Id == id);
+            return  _context.Items.FirstOrDefault(p => p.Id == id);
         }
 
-        Task<IReadOnlyList<Item>> IitemRepository.GetItemsAsync()
+        async Task<IReadOnlyList<Item>> GetItemsAsync()
+        {
+            return await _context.Items.ToListAsync();
+        }
+
+        Task<IReadOnlyList<Item>> IitemRepository.GetItemsAsync()/////////////////////////////not correct 
         {
             throw new NotImplementedException();
         }

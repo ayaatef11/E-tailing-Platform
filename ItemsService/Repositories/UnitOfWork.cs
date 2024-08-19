@@ -1,17 +1,16 @@
-﻿using Core.Entities;
+﻿/*using Core.Entities;
 using Core.Interfaces.Repositories;
 using OrdersAndItemsService.Models;
-using Repository.Data;
 using System.Collections;
 
 namespace Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly StoreContext _storeContext;
+        private readonly DbContext _storeContext;
         private Hashtable _repositories;
 
-        public UnitOfWork(StoreContext storeContext)
+        public UnitOfWork(DbContext storeContext)
         {
             _storeContext = storeContext;
             _repositories = new Hashtable();
@@ -43,4 +42,4 @@ namespace Repository
             await _storeContext.DisposeAsync();
         }
     }
-}
+}*/

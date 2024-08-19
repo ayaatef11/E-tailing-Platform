@@ -1,6 +1,6 @@
 ﻿
 using System.Reflection;
-using OrdersAndItemsService.Models.OrderEntities;
+using Core.Entities.Order_Entities;
 namespace WebApplication1.Data
 {
     public class AppDbContext:DbContext

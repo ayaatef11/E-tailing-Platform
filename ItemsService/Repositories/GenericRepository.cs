@@ -1,10 +1,8 @@
 ﻿using Core.Entities;
-using Core.Interfaces.Repositories;
-using Core.Interfaces.Specifications;
 using Microsoft.EntityFrameworkCore;
+using OrdersAndItemsService.Data;
 using OrdersAndItemsService.interfaces;
 using OrdersAndItemsService.Models;
-using Repository.Data;
 
 namespace Repository
 {

@@ -1,4 +1,4 @@
-﻿using OrdersAndItemsService.Models.BasketEntites;
+﻿using Core.Entities.Basket_Entities;
 
 namespace OrdersAndItemsService.Models
 {

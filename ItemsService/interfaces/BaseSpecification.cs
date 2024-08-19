@@ -2,7 +2,7 @@
 
 namespace OrdersAndItemsService.interfaces
 {
-    public class BaseSpecification<T> : ISpecification<T>
+    public class BaseSpecification<T> : ISpecifications<T>
     {
         public BaseSpecification()
         {
@@ -19,6 +19,9 @@ namespace OrdersAndItemsService.interfaces
         public List<Expression<Func<T, object>>> OrderBy { get; private set; } //=> throw new NotImplementedException();
 
         public List<Expression<Func<T, object>>> OrderByDesending { get; private set; } //=> throw new NotImplementedException();
+
+        List<Expression<Func<T, object>>> ISpecifications<T>.Includes => throw new NotImplementedException();
+
         protected void AddInclude(Expression<Func<T, object>> include)
         {
             Includes.Add(include);
@@ -26,11 +29,11 @@ namespace OrdersAndItemsService.interfaces
         protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
         {
 
-            OrderBy = orderByExpression;
+            OrderBy.Add(orderByExpression);
         }
         protected void AddOrderBvDescendina(Expression<Func<T,object>> orderBvDescExpression)
         {
-            OrderByDesending = orderBvDescExpression;
+            OrderByDesending.Add( orderBvDescExpression);
         }
     }
 }
