@@ -6,6 +6,8 @@ namespace WebApplication1.Data
     public class AppDbContext:DbContext
 
     {
+        public object _refreshTokens;
+
         public AppDbContext(DbContextOptions options):base(options) 
         {
             

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Core.Entities.Order_Entities;
+using Microsoft.AspNetCore.Http;
 using OrdersAndItemsService.Models;
-using OrdersAndItemsService.Models.OrderEntities;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using System.Numerics;
