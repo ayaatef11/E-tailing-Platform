@@ -1,6 +1,4 @@
 ﻿using Core.Entities.Order_Entities;
-using OrdersAndItemsService.interfaces;
-using OrdersAndItemsService.Models.OrderEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

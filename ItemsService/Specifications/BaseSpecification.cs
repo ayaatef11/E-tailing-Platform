@@ -26,6 +26,17 @@ namespace Core.Specifications
         public int Take { get; set; }
         public bool IsPaginationEnabled { get; set; }
 
+        public Expression<Func<T, bool>> Criteria { get; }
+
+        public List<Expression<Func<T, object>>> Includes{
+        
+        
+        }
+
+        List<Expression<Func<T, object>>> ISpecifications<T>.OrderBy => throw new NotImplementedException();
+
+        public List<Expression<Func<T, object>>> OrderByDesending => throw new NotImplementedException();
+
         public void ApplyPagination(int skip, int take)
         {
             IsPaginationEnabled = true;
