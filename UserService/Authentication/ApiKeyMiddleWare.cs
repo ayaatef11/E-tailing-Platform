@@ -1,39 +1,41 @@
-﻿using System.Text.RegularExpressions;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
-namespace WebApplication1.Authentication
+public class ApiKeyMiddleware
 {
-    public class ApiKeyMiddleWare
+    private readonly RequestDelegate _next;
+    private const string ApiKeyHeaderName = "X-Api-Key"; // Customize your header name
+    private readonly IConfiguration _configuration;
+
+    public ApiKeyMiddleware(RequestDelegate next, IConfiguration configuration)
     {
-        private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
+        _next = next;
+        _configuration = configuration;
+    }
 
-        public ApiKeyMiddleWare(RequestDelegate next,IConfiguration configuration)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        // Check if the API key header is present in the request
+        if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var providedApiKey))
         {
-            _next = next;
-                _configuration = configuration;
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("API Key was not provided.");
+            return;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        // Retrieve the valid API key from the configuration
+        var validApiKey = _configuration.GetValue<string>("ApiKey");
+
+        // Validate the API key
+        if (!string.Equals(validApiKey, providedApiKey, StringComparison.Ordinal))
         {
-  var prodivedApiKey = context.Request.Headers[AuthConfig.ApiKeyHeader].FirstOrDefault();
-            var isValid=IsValidApiKey(prodivedApiKey);
-            if (isValid)
-            {
-                await GenerateResponse(context, 401, "Invalid Authentication");
-                return;
-            }
-            await _next(context);
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await context.Response.WriteAsync("Invalid API Key.");
+            return;
         }
-        public bool IsValidApiKey(string providedApiKey)
-        {
-            if (string.IsNullOrEmpty(providedApiKey)) return false;
-            var validApiKey = _configuration.GetValue<string>(AuthConfig.AuthSection);
-            return string.Equals(validApiKey,providedApiKey,StringComparison.Ordinal);
-        }
-        public static async Task GenerateResponse(HttpContext context, int httpStatusCode,string msg)
-        {
-            context.Response.StatusCode = httpStatusCode;
-            await context.Response.WriteAsync(msg);
-        }
+
+        // Proceed to the next middleware in the pipeline
+        await _next(context);
     }
 }

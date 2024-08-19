@@ -15,6 +15,7 @@ using WebApplication1.Models.DTOS.Requests;
 using WebApplication1.Models.DTOS.Responses;
 using WebApplication1.Models.DTOS;
 using WebApplication1.Models;
+using UserService.Data;
 
 namespace newProj.Controllers
 {
@@ -26,11 +27,12 @@ namespace newProj.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly jwtConfig _jwtConfig;
         private readonly TokenValidationParameters _tokenValidationParameters;
-        private readonly AppDbContext _dbContext;
-       
+        private readonly IdentityContext _dbContext;
+        private IConfiguration _jwtSettings;
+
         public AuthManagementController(UserManager<IdentityUser> userManager, IOptionsMonitor<jwtConfig> optionsMonitor
             , TokenValidationParameters tokenValidationParameters
-            , AppDbContext apidbcontext)
+            , IdentityContext apidbcontext)
         {
             _userManager = userManager;
             _jwtConfig = optionsMonitor.CurrentValue;
