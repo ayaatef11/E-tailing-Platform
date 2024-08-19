@@ -112,7 +112,40 @@ namespace newProj.Controllers
                 Success = false
             });
         }
-       
+
+
+        [HttpPost]
+        [Route("RefreshToken")]
+
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequests tokenRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await tokenService. VerifyToken(tokenRequest);
+
+                if (result == null)
+                {
+                    return BadRequest(new RegistrationResponseDTO()
+                    {
+                        Errors = new List<string>()
+                        {
+                            "invalid tokens "
+                        },
+                        Success = false
+                    });
+                }
+                return Ok(result);
+            }
+
+            return BadRequest(new RegistrationResponseDTO()
+            {
+                Errors = new List<string>()
+            {
+                    "Invalid payload"
+                },
+                Success = false
+            });
+        }
         //send email
         //forget password
         //reset password 

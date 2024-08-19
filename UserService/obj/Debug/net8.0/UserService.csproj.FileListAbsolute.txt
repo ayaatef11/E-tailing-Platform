@@ -4,3 +4,4 @@ F:\full-stack\WebApplication1\UserService\obj\Debug\net8.0\UserService.AssemblyI
 F:\full-stack\WebApplication1\UserService\obj\Debug\net8.0\UserService.AssemblyInfo.cs
 F:\full-stack\WebApplication1\UserService\obj\Debug\net8.0\UserService.csproj.CoreCompileInputs.cache
 F:\full-stack\WebApplication1\UserService\obj\Debug\net8.0\UserService.MvcApplicationPartsAssemblyInfo.cache
+F:\full-stack\WebApplication1\UserService\obj\Debug\net8.0\UserService.MvcApplicationPartsAssemblyInfo.cs

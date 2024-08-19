@@ -71,16 +71,7 @@ namespace WebApplication1.Controllers
             }
         }
         //**********************add them to item controller
-        public IActionResult CreateOrder(int id, [FromBody] Order newOrder)
-        {
-            var user = _service.GetById(id);
-            if (user == null)
-                return NotFound();
-
-            newOrder.Id = user.orders.Count + 1; 
-            user.orders.Add(newOrder);
-            return Ok(newOrder);
-        }
+      
 
         [HttpPost("{userId}/orders/{orderId}/newItem")]
         public IActionResult AddItemToOrder(int userId, int orderId, [FromBody] Item newItem)

@@ -2,20 +2,18 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Configuration;
 using WebApplication1.Models;
 using WebApplication1.Models.DTOS.Requests;
-using WebApplication1.Models.DTOS.Responses;
 using WebApplication1.Models.DTOS;
 using System.Web.Mvc;
 using UserService.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class TokenService(IdentityDbContext _dbContext, jwtConfig _jwtConfig, IConfiguration _jwtSettings,TokenValidationParameters _tokenValidationParameters, )
+public class TokenService(UserManager<AppUser> _userManager, IdentityDbContext _dbContext, jwtConfig _jwtConfig, IConfiguration _jwtSettings,TokenValidationParameters _tokenValidationParameters)
 {
     private readonly string _accessTokenSecret = "your_access_token_secret"; // Use a secure key
     private readonly string _refreshTokenSecret = "your_refresh_token_secret"; // Use a secure key
@@ -91,38 +89,6 @@ public class TokenService(IdentityDbContext _dbContext, jwtConfig _jwtConfig, IC
     }
 
 
-    [HttpPost]
-    [Route("RefreshToken")]
-
-    public async Task<IActionResult> RefreshToken([FromBody] TokenRequests tokenRequest)
-    {
-        if (ModelState.IsValid)
-        {
-            var result = await VerifyToken(tokenRequest);
-
-            if (result == null)
-            {
-                return BadRequest(new RegistrationResponseDTO()
-                {
-                    Errors = new List<string>()
-                        {
-                            "invalid tokens "
-                        },
-                    Success = false
-                });
-            }
-            return Ok(result);
-        }
-
-        return BadRequest(new RegistrationResponseDTO()
-        {
-            Errors = new List<string>()
-            {
-                    "Invalid payload"
-                },
-            Success = false
-        });
-    }
     public async Task<AuthResult> GenerateJwtToken(IdentityUser user)
     {
         var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -249,7 +215,7 @@ public class TokenService(IdentityDbContext _dbContext, jwtConfig _jwtConfig, IC
             //update current token
 
             storedToken.isUsed = true;
-            _dbContext._re.Update(storedToken);
+            object value = _dbContext._refreshTokens.Update(storedToken);
             await _dbContext.SaveChangesAsync();
 
             var dbUser = await _userManager.FindByIdAsync(storedToken.userId);
