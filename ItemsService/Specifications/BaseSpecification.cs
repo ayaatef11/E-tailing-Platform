@@ -28,10 +28,7 @@ namespace Core.Specifications
 
         public Expression<Func<T, bool>> Criteria { get; }
 
-        public List<Expression<Func<T, object>>> Includes{
-        
-        
-        }
+        public List<Expression<Func<T, object>>> Includes{get;}
 
         List<Expression<Func<T, object>>> ISpecifications<T>.OrderBy => throw new NotImplementedException();
 
