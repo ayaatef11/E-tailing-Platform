@@ -7,17 +7,14 @@ namespace OrdersAndItemsService.Repositories
     {
        public async Task<Item>  getItemByIdAsync(int id)
         {
-            return  _context.Items.FirstOrDefault(p => p.Id == id);
+            return await  _context.Items.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        async Task<IReadOnlyList<Item>> GetItemsAsync()
+       public async Task<IReadOnlyList<Item>> GetItemsAsync()
         {
             return await _context.Items.ToListAsync();
         }
 
-        Task<IReadOnlyList<Item>> IitemRepository.GetItemsAsync()/////////////////////////////not correct 
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }

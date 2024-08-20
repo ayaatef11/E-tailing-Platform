@@ -1,86 +1,79 @@
 ﻿
-
+using API.Dtos;
+using API.Errors;
+using AutoMapper;
 using Core.Entities.Order_Entities;
+using Core.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OrdersAndItemsService.Controllers;
+using OrdersAndItemsService.Errors;
+using Stripe.Climate;
+using System.Security.Claims;
 
-namespace WebApplication1.Controllers
+namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class OrderController(IRepository<Order> _service) : ControllerBase
+    [Authorize]
+    public class OrderController : BaseApiController
     {
+        private readonly IOrderService _orderService;
+        private readonly IMapper _mapper;
 
-        public async Task<ActionResult> Index()
+        public OrderController(IOrderService orderService, IMapper mapper)
         {
-            var result = _service.GetAllAsync();
-            if (result != null) return Ok(result);
-            else return NotFound();
-            // return await;
+            _orderService = orderService;
+            _mapper = mapper;
         }
 
-        public ActionResult Details(int id)
-        {
-            var result = _service.GetByIdAsync(id);
-            if (result != null) return Ok(result);
-            else return NotFound();
 
-        }
-        public IActionResult CreateOrder(int id, [FromBody] Order newOrder)
-        {
-            var user = _service.GetById(id);
-            if (user == null)
-                return NotFound();
-
-            newOrder.Id = user.orders.Count + 1;
-            user.orders.Add(newOrder);
-            return Ok(newOrder);
-        }
-
+        [ProducesResponseType(typeof(OrderToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Order model)
+        public async Task<ActionResult<OrderToReturnDto>> CreateOrder(OrderDto orderDto)
         {
-            try
-            {
-                var result = _service.SaveAsync(model);
-                if (result != null) return Ok(result); else return NotFound();
-                // return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            var address = _mapper.Map<OrderAddressDto, OrderAddress>(orderDto.ShippingAddress);
+
+            var order = await _orderService.CreateOrderAsync(buyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, address);
+
+            if (order is null)
+                return BadRequest(new ApiResponse(400));
+
+            return Ok(_mapper.Map<Order, OrderToReturnDto>(order));
         }
 
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Order model)
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetOrdersForUser()
         {
-            try
-            {
-                var result = _service.Update(model);
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            var orders = await _orderService.GetOrdersForUserAsync(buyerEmail);
+
+            return Ok(_mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDto>>(orders));
         }
 
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(Order model)
+        [HttpGet("{orderId}")]
+        [ProducesResponseType(typeof(OrderToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<OrderToReturnDto>> GetSpecificOrderForUser(int orderId)
         {
-            try
-            {
-                var result = _service.DeleteAsync(model);
-                if (result != null) return Ok(); else return NotFound();
-                // return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            var order = await _orderService.GetSpecificOrderForUserAsync(orderId, buyerEmail);
+
+            if (order is null)
+                return NotFound(new ApiResponse(404));
+
+            return Ok(_mapper.Map<Order, OrderToReturnDto>(order));
+        }
+
+        [HttpGet("deliveryMethod")]
+        public async Task<ActionResult<IReadOnlyList<OrderDeliveryMethod>>> GetAllDeliveryMethods()
+        {
+            var deliveryMethods = await _orderService.GetAllDeliveryMethodsAsync();
+
+            return Ok(deliveryMethods);
         }
     }
 }

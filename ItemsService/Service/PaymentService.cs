@@ -8,34 +8,23 @@ using System.Threading.Tasks;
 
 namespace OrdersAndItemsService.Service
 {
-    public class PaymentService : IpaymentService
+    public class PaymentService(IGenericRepository<Item> repo, IBasketRepository basketRepo, IConfiguration configuration) : IpaymentService
     {
-        private readonly IRepository<Item> _repo;
-        private readonly IBasketRepository _basketRepo;
-        private readonly IConfiguration _configuration;
-
-        public PaymentService(IRepository<Item> repo, IBasketRepository basketRepo, IConfiguration configuration)
-        {
-            _repo = repo;
-            _basketRepo = basketRepo;
-            _configuration = configuration;
-        }
-
         public async Task<CustomerBasket> CreateOrUpdatePaymentIntent(string basketId)
         {
-            StripeConfiguration.ApiKey = _configuration["StripeSettings:SecretKey"];
-            var basket = await _basketRepo.GetBasketAsync(basketId);
+            StripeConfiguration.ApiKey = configuration["StripeSettings:SecretKey"];
+            var basket = await basketRepo.GetBasketAsync(basketId);
             var shippingPrice =0m;
 
             if (basket.DeliveryMethodId!=0)
             {
-                var deliveryMethod = await _repo.GetByIdAsync((int)basket.DeliveryMethodId);
+                var deliveryMethod = await repo.GetByIdAsync((int)basket.DeliveryMethodId);
                 shippingPrice = deliveryMethod.Price;
             }
 
             foreach (var item in basket.Items)
             {
-                var productItem = await _repo.GetByIdAsync(item.Id);
+                var productItem = await repo.GetByIdAsync(item.Id);
                 if (item.Price != productItem.Price)
                     item.Price = productItem.Price;
             }
@@ -66,7 +55,7 @@ namespace OrdersAndItemsService.Service
                 await service.UpdateAsync(basket.PaymentIntentId, options);
             }
 
-            await _basketRepo.UpdateBasketAsync(basket);
+            await basketRepo.UpdateBasketAsync(basket);
             return basket;
         }
     }

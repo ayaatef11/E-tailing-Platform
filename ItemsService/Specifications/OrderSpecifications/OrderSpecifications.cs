@@ -13,7 +13,7 @@ namespace Core.Specifications.Order_Specifications
         {
             WhereCriteria = P => P.BuyerEmail == buyerEmail;
 
-            IncludesCriteria.Add(P => P.DeliveryMethod);
+            IncludesCriteria.Add(P => P.DeliveryMethod!);
             IncludesCriteria.Add(P => P.Items);
 
             OrderByDesc = P => P.OrderDate;
@@ -23,7 +23,7 @@ namespace Core.Specifications.Order_Specifications
         {
             WhereCriteria = P => P.BuyerEmail == buyerEmail && P.Id == orderId;
 
-            IncludesCriteria.Add(P => P.DeliveryMethod);
+            IncludesCriteria.Add(P => P.DeliveryMethod!);
             IncludesCriteria.Add(P => P.Items);
         }
     }

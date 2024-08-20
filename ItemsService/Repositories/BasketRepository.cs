@@ -1,14 +1,14 @@
 ﻿using Core.Entities.Basket_Entities;
-using Microsoft.EntityFrameworkCore.Storage;
 using OrdersAndItemsService.IRepositories;
+using OrdersAndItemsService.Models;
 using StackExchange.Redis;
 using System.Text.Json;
-
 namespace Repository
 {
     public class BasketRepository : IBasketRepository
     {
         private readonly IDatabase _database;
+
         public BasketRepository(IConnectionMultiplexer connection)
         {
             _database = connection.GetDatabase();
@@ -23,10 +23,21 @@ namespace Repository
         {
             return await _database.KeyDeleteAsync(basketId);
         }
+
         public async Task<Basket?> GetBasketAsync(string basketId)
         {
             var basket = await _database.StringGetAsync(basketId);
             return basket.IsNullOrEmpty ? null : JsonSerializer.Deserialize<Basket>(basket);
+        }
+
+        public Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<CustomerBasket> IBasketRepository.GetBasketAsync(string basketId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

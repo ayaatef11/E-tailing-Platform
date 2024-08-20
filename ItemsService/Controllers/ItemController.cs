@@ -1,75 +1,66 @@
 ﻿
-
+using API.Dtos;
+using API.Errors;
+using API.Helpers;
+using AutoMapper;
+using Core.Entities;
+using Core.Interfaces.Services;
+using Core.Specifications.ProductSpecifications;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OrdersAndItemsService.Controllers;
+using OrdersAndItemsService.Errors;
 
-namespace WebApplication1.Controllers
+namespace API.Controllers
 {
-    public class ItemController(IRepository<Item> _service) : BaseApiController
+    public class ProductController : BaseApiController
     {
-       
-        public async Task< ActionResult> Index()
+        private readonly IProductService _productService;
+        private readonly IMapper _mapper;
+
+        public ProductController(IProductService productService, IMapper mapper)
         {
-            var result =await  _service.GetAllAsync();
-            if (result!=null) return Ok(result);
-            else return NotFound();
-          
+            _productService = productService;
+            _mapper = mapper;
         }
 
-        public async Task<ActionResult> Details(int id)
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecificationParameters specParams)
         {
-            var result=await _service.GetByIdAsync(id);
-            if (result != null) return Ok(result);
-            else return NotFound();
-           
+            var products = await _productService.GetProductsAsync(specParams);
+
+            var productsDto = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+
+            var productsCount = await _productService.GetProductCount(specParams);
+
+            return Ok(new PaginationToReturn<ProductToReturnDto>(specParams.PageIndex, specParams.PageSize, productsCount, productsDto));
         }
 
-       
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Item model)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ProductToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProduct(int id)
         {
-            try
-            {
-                var result = _service.SaveAsync(model);
-                if (result != null) return Ok(result); else return NotFound();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var product = await _productService.GetProductAsync(id);
+
+            if (product is null)
+                return NotFound(new ApiResponse(404));
+
+            return Ok(_mapper.Map<Product, ProductToReturnDto>(product));
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit( Item model)
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
         {
-            try
-            {
-                var result = _service.Update(model);
-                 return Ok(result);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var brands = await _productService.GetBrandsAsync();
+            return Ok(brands);
         }
 
-       
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(Item model)
+        [HttpGet("categories")]
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetCategories()
         {
-            try
-            {
-                var result= _service.DeleteAsync(model);
-                if (result != null) return Ok();else return NotFound();
-               // return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var categories = await _productService.GetCategoriesAsync();
+            return Ok(categories);
         }
     }
 }

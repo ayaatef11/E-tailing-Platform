@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using OrdersAndItemsService.MiddleWares;
-using OrdersAndItemsService.Filters;
 using Serilog;
 using Microsoft.OpenApi.Models;
 using OrdersAndItemsService.NewFolder;
