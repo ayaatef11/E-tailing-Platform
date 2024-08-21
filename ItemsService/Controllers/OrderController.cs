@@ -1,12 +1,7 @@
-﻿
-using API.Dtos;
-using API.Errors;
-using AutoMapper;
-using Core.Entities.Order_Entities;
-using Core.Interfaces.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrdersAndItemsService.Controllers;
+using OrdersAndItemsService.Core.Models.OrderEntities;
 using OrdersAndItemsService.Errors;
 using Stripe.Climate;
 using System.Security.Claims;
@@ -14,18 +9,8 @@ using System.Security.Claims;
 namespace API.Controllers
 {
     [Authorize]
-    public class OrderController : BaseApiController
+    public class OrderController(IOrderService orderService, IMapper mapper) : BaseApiController
     {
-        private readonly IOrderService _orderService;
-        private readonly IMapper _mapper;
-
-        public OrderController(IOrderService orderService, IMapper mapper)
-        {
-            _orderService = orderService;
-            _mapper = mapper;
-        }
-
-
         [ProducesResponseType(typeof(OrderToReturnDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [HttpPost]
@@ -33,14 +18,14 @@ namespace API.Controllers
         {
             var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            var address = _mapper.Map<OrderAddressDto, OrderAddress>(orderDto.ShippingAddress);
+            var address = mapper.Map<OrderAddressDto, OrderAddress>(orderDto.ShippingAddress);
 
-            var order = await _orderService.CreateOrderAsync(buyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, address);
+            var order = await orderService.CreateOrderAsync(buyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, address);
 
             if (order is null)
                 return BadRequest(new ApiResponse(400));
 
-            return Ok(_mapper.Map<Order, OrderToReturnDto>(order));
+            return Ok(mapper.Map<Order, OrderToReturnDto>(order));
         }
 
         [HttpGet]
@@ -48,9 +33,9 @@ namespace API.Controllers
         {
             var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            var orders = await _orderService.GetOrdersForUserAsync(buyerEmail);
+            var orders = await orderService.GetOrdersForUserAsync(buyerEmail);
 
-            return Ok(_mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDto>>(orders));
+            return Ok(mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDto>>(orders));
         }
 
         [HttpGet("{orderId}")]
@@ -60,18 +45,18 @@ namespace API.Controllers
         {
             var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            var order = await _orderService.GetSpecificOrderForUserAsync(orderId, buyerEmail);
+            var order = await orderService.GetSpecificOrderForUserAsync(orderId, buyerEmail);
 
             if (order is null)
                 return NotFound(new ApiResponse(404));
 
-            return Ok(_mapper.Map<Order, OrderToReturnDto>(order));
+            return Ok(mapper.Map<Order, OrderToReturnDto>(order));
         }
 
         [HttpGet("deliveryMethod")]
         public async Task<ActionResult<IReadOnlyList<OrderDeliveryMethod>>> GetAllDeliveryMethods()
         {
-            var deliveryMethods = await _orderService.GetAllDeliveryMethodsAsync();
+            var deliveryMethods = await orderService.GetAllDeliveryMethodsAsync();
 
             return Ok(deliveryMethods);
         }

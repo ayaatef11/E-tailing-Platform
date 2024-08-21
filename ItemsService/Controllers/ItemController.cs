@@ -1,37 +1,22 @@
-﻿
-using API.Dtos;
-using API.Errors;
-using API.Helpers;
-using AutoMapper;
-using Core.Entities;
-using Core.Interfaces.Services;
-using Core.Specifications.ProductSpecifications;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrdersAndItemsService.Controllers;
+using OrdersAndItemsService.Core.Models;
 using OrdersAndItemsService.Errors;
 
 namespace API.Controllers
 {
-    public class ProductController : BaseApiController
+
+    public class ProductController(IProductService productService, IMapper mapper) : BaseApiController
     {
-        private readonly IProductService _productService;
-        private readonly IMapper _mapper;
-
-        public ProductController(IProductService productService, IMapper mapper)
-        {
-            _productService = productService;
-            _mapper = mapper;
-        }
-
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecificationParameters specParams)
         {
-            var products = await _productService.GetProductsAsync(specParams);
+            var products = await productService.GetProductsAsync(specParams);
 
-            var productsDto = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+            var productsDto = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
 
-            var productsCount = await _productService.GetProductCount(specParams);
+            var productsCount = await productService.GetProductCount(specParams);
 
             return Ok(new PaginationToReturn<ProductToReturnDto>(specParams.PageIndex, specParams.PageSize, productsCount, productsDto));
         }
@@ -41,25 +26,25 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProduct(int id)
         {
-            var product = await _productService.GetProductAsync(id);
+            var product = await productService.GetProductAsync(id);
 
             if (product is null)
                 return NotFound(new ApiResponse(404));
 
-            return Ok(_mapper.Map<Product, ProductToReturnDto>(product));
+            return Ok(mapper.Map<Product, ProductToReturnDto>(product));
         }
 
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
         {
-            var brands = await _productService.GetBrandsAsync();
+            var brands = await productService.GetBrandsAsync();
             return Ok(brands);
         }
 
         [HttpGet("categories")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetCategories()
         {
-            var categories = await _productService.GetCategoriesAsync();
+            var categories = await productService.GetCategoriesAsync();
             return Ok(categories);
         }
     }

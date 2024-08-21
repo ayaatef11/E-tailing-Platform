@@ -3,8 +3,8 @@ using OrdersAndItemsService.MiddleWares;
 using Serilog;
 using Microsoft.OpenApi.Models;
 using OrdersAndItemsService.NewFolder;
-using WebApplication1.Data;
 using StackExchange.Redis;
+using OrdersAndItemsService.Repository.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
