@@ -1,6 +1,6 @@
-﻿using OrdersAndItemsService.Errors;
-using System.Net;
-using System.Text.Json;
+﻿using OrdersAndItemsService.API.Errors;
+
+
 
 namespace OrdersAndItemsService.API.MiddleWares
 {
@@ -22,7 +22,7 @@ namespace OrdersAndItemsService.API.MiddleWares
         {
             try
             {
-                await _next(context);
+                await _next(context);//surround
             }
             catch (Exception ex)
             {
