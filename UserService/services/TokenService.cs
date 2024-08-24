@@ -8,12 +8,11 @@ using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Configuration;
 using WebApplication1.Models;
 using WebApplication1.Models.DTOS.Requests;
-using WebApplication1.Models.DTOS;
-using System.Web.Mvc;
-using UserService.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using UserService.Models;
+using UserService.Data;
 
-public class TokenService(UserManager<AppUser> _userManager, IdentityDbContext _dbContext, jwtConfig _jwtConfig, IConfiguration _jwtSettings,TokenValidationParameters _tokenValidationParameters)
+public class TokenService(UserManager<AppUser> _userManager, IdentityContext _dbContext, jwtConfig _jwtConfig, IConfiguration _jwtSettings,TokenValidationParameters _tokenValidationParameters)
 {
     private readonly string _accessTokenSecret = "your_access_token_secret"; // Use a secure key
     private readonly string _refreshTokenSecret = "your_refresh_token_secret"; // Use a secure key
