@@ -2,5 +2,6 @@
 {
     public class ApiValidationErrorResponse
     {
+        public  string[] Errors { get; set; }
     }
 }
