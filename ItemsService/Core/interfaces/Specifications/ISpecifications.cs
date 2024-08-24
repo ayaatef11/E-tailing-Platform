@@ -1,12 +1,17 @@
-﻿using System.Linq.Expressions;
+﻿
+using OrdersAndItemsService.Core.Entities;
+using System.Linq.Expressions;
 
-namespace OrdersAndItemsService.Core.interfaces.Specifications
+namespace  OrdersAndItemsService.Core.interfaces.Specifications
 {
-    public interface ISpecifications<T>
+    public interface ISpecifications<T> where T : BaseEntity
     {
-        Expression<Func<T, bool>> Criteria { get; }
-        List<Expression<Func<T, object>>> Includes { get; }
-        List<Expression<Func<T, object>>> OrderBy { get; }
-        List<Expression<Func<T, object>>> OrderByDesending { get; }
+        public Expression<Func<T, bool>> WhereCriteria { get; set; }
+        public List<Expression<Func<T, object>>> IncludesCriteria { get; set; }
+        public Expression<Func<T, object>> OrderBy { get; set; }
+        public Expression<Func<T, object>> OrderByDesc { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
+        public bool IsPaginationEnabled { get; set; }
     }
-}
+    }
