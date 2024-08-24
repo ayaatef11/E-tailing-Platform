@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OrdersAndItemsService.Core.interfaces.Repositories;
 using OrdersAndItemsService.Core.Models;
-using OrdersAndItemsService.Repository.IRepositories;
 
 namespace OrdersAndItemsService.Controllers
 {
