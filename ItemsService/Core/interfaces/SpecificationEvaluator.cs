@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using OrdersAndItemsService.Core.interfaces;
+using OrdersAndItemsService.Core.interfaces.Specifications;
 
 public class SpecificationEvaluator<T> where T : class
 {
