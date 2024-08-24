@@ -1,6 +1,6 @@
 ﻿using OrdersAndItemsService.Core.Models;
 
-namespace OrdersAndItemsService.Core.Models.OrderEntities
+namespace OrdersAndItemsService.Core.Entities.OrderEntities
 {
     public class OrderItem : BaseEntity
     {
