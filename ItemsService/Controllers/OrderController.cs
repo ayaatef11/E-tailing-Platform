@@ -1,23 +1,26 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using API.Dtos;
+using AutoMapper;
+using Core.Interfaces.Services;
 using OrdersAndItemsService.API.Errors;
 using OrdersAndItemsService.Controllers;
-using OrdersAndItemsService.Core.Models.OrderEntities;
-using Stripe.Climate;
-using System.Security.Claims;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
 
+using System.Security.Claims;
 namespace API.Controllers
 {
     [Authorize]
     public class OrderController(IOrderService orderService, IMapper mapper) : BaseApiController
     {
-        [ProducesResponseType(typeof(OrderToReturnDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OrderToReturnDto), StatusCodes.Status200OK)]// used to specify the type of response and the HTTP status
+                                                                                 // code that a particular action method is expected to return.
+                                                                                 // This attribute is commonly used in API controllers to provide
+                                                                                 // metadata for API documentation and to help tools like Swagger generate accurate documentation.
+
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [HttpPost]
         public async Task<ActionResult<OrderToReturnDto>> CreateOrder(OrderDto orderDto)
         {
-            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
-
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);// Retrieves the email address of the current user from the claims principal.
             var address = mapper.Map<OrderAddressDto, OrderAddress>(orderDto.ShippingAddress);
 
             var order = await orderService.CreateOrderAsync(buyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, address);
