@@ -1,4 +1,5 @@
 ﻿
+using OrdersAndItemsService.Core.Entities;
 using OrdersAndItemsService.Core.Models;
 
 
