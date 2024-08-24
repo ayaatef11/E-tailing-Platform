@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "d98XskOiI7s=",
+  "dgSpecHash": "K3yd40L6CPw=",
   "success": true,
-  "projectFilePath": "F:\\full-stack\\WebApplication1\\UserService\\UserService.csproj",
+  "projectFilePath": "F:\\full-stack\\ServiceIntegration\\UserService\\UserService.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Aya Atef\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Aya Atef\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Aya Atef\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\Aya Atef\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",

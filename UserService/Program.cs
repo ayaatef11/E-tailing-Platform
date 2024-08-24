@@ -3,17 +3,15 @@ using System.Text;
 using WebApplication1.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using WebApplication1.Models;
 using UserService.Exceptions;
-using OrdersAndItemsService.Repository.Data;
+using UserService.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var jwtConfig=builder.Configuration.GetSection("JwtConfig").Get<jwtConfig>();
@@ -48,7 +46,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
     options.SignIn.RequireConfirmedEmail = true;
 })
-.AddEntityFrameworkStores<AppDbContext>()
+.AddEntityFrameworkStores<IdentityContext>()
 .AddDefaultTokenProviders();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
@@ -58,7 +56,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(o =>
     o.Password.RequiredLength = 10;
     o.Password.RequiredUniqueChars = 3;
     o.SignIn.RequireConfirmedEmail = true;
-}).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
 
 //builder.Services.Configure<jwtConfig>(builder.Configuration.GetSection("jwtConfig"));
 
