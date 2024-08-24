@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OrdersAndItemsService.API.Errors;
 using OrdersAndItemsService.Controllers;
 using OrdersAndItemsService.Core.Models.OrderEntities;
-using OrdersAndItemsService.Errors;
 using Stripe.Climate;
 using System.Security.Claims;
 
