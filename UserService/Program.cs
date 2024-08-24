@@ -4,9 +4,9 @@ using WebApplication1.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using WebApplication1.Data;
 using WebApplication1.Models;
 using UserService.Exceptions;
+using OrdersAndItemsService.Repository.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
