@@ -1,8 +1,8 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
-using OrdersAndItemsService.NewFolder;
 using OrdersAndItemsService.Services.Iservice;
+using OrdersAndItemsService.Services.Settings;
 
 namespace OrdersAndItemsService.Services.Service
 {
