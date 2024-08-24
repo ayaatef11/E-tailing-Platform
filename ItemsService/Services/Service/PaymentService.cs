@@ -1,11 +1,10 @@
 ﻿
 using OrdersAndItemsService.Core.interfaces.Repositories;
 using OrdersAndItemsService.Core.interfaces.Services;
-
-using OrdersAndItemsService.Core.Models.OrderEntities;
 using Stripe;
-using Product = Core.Entities.Product;
+using Product = OrdersAndItemsService.Core.Entities.Product;//to solve ambigiuity between stripe products and program products
 using OrdersAndItemsService.Core.Entities.BasketEntites;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
 
 namespace Service
 {
