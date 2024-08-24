@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
-using OrdersAndItemsService.Errors;
+﻿
+using OrdersAndItemsService.API.Errors;
+
 namespace OrdersAndItemsService.Controllers
 {
     [Route("error/{code}")]
