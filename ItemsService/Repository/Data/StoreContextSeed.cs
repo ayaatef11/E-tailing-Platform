@@ -1,6 +1,6 @@
 ﻿
-using OrdersAndItemsService.Core.Models.OrderEntities;
-using OrdersAndItemsService.Core.Models;
+using OrdersAndItemsService.Core.Entities;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
 
 
 namespace Repository.Data

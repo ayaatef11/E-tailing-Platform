@@ -1,9 +1,8 @@
-﻿using Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using OrdersAndItemsService.Core.Entities;
+using OrdersAndItemsService.Core.interfaces;
+using OrdersAndItemsService.Core.Specifications;
 
 namespace Core.Specifications.ProductSpecifications
 {

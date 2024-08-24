@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\full-stack\\WebApplication1\\UserService\\UserService.csproj": {}
+    "F:\\full-stack\\ServiceIntegration\\UserService\\UserService.csproj": {}
   },
   "projects": {
-    "F:\\full-stack\\WebApplication1\\ItemsService\\OrdersAndItemsService.csproj": {
+    "F:\\full-stack\\ServiceIntegration\\ItemsService\\OrdersAndItemsService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\full-stack\\WebApplication1\\ItemsService\\OrdersAndItemsService.csproj",
+        "projectUniqueName": "F:\\full-stack\\ServiceIntegration\\ItemsService\\OrdersAndItemsService.csproj",
         "projectName": "OrdersAndItemsService",
-        "projectPath": "F:\\full-stack\\WebApplication1\\ItemsService\\OrdersAndItemsService.csproj",
+        "projectPath": "F:\\full-stack\\ServiceIntegration\\ItemsService\\OrdersAndItemsService.csproj",
         "packagesPath": "C:\\Users\\Aya Atef\\.nuget\\packages\\",
-        "outputPath": "F:\\full-stack\\WebApplication1\\ItemsService\\obj\\",
+        "outputPath": "F:\\full-stack\\ServiceIntegration\\ItemsService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Aya Atef\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -47,6 +47,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "CloudinaryDotNet": {
               "target": "Package",
               "version": "[1.26.2, )"
@@ -131,14 +135,14 @@
         }
       }
     },
-    "F:\\full-stack\\WebApplication1\\UserService\\UserService.csproj": {
+    "F:\\full-stack\\ServiceIntegration\\UserService\\UserService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\full-stack\\WebApplication1\\UserService\\UserService.csproj",
+        "projectUniqueName": "F:\\full-stack\\ServiceIntegration\\UserService\\UserService.csproj",
         "projectName": "UserService",
-        "projectPath": "F:\\full-stack\\WebApplication1\\UserService\\UserService.csproj",
+        "projectPath": "F:\\full-stack\\ServiceIntegration\\UserService\\UserService.csproj",
         "packagesPath": "C:\\Users\\Aya Atef\\.nuget\\packages\\",
-        "outputPath": "F:\\full-stack\\WebApplication1\\UserService\\obj\\",
+        "outputPath": "F:\\full-stack\\ServiceIntegration\\UserService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Aya Atef\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -157,8 +161,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\full-stack\\WebApplication1\\ItemsService\\OrdersAndItemsService.csproj": {
-                "projectPath": "F:\\full-stack\\WebApplication1\\ItemsService\\OrdersAndItemsService.csproj"
+              "F:\\full-stack\\ServiceIntegration\\ItemsService\\OrdersAndItemsService.csproj": {
+                "projectPath": "F:\\full-stack\\ServiceIntegration\\ItemsService\\OrdersAndItemsService.csproj"
               }
             }
           }

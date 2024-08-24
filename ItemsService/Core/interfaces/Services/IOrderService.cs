@@ -1,5 +1,6 @@
-﻿using Core.Entities.Order_Entities;
-using OrdersAndItemsService.Core.Models.OrderEntities;
+﻿
+using OrdersAndItemsService.Core.Entities.OrderEntities;
+
 
 namespace Core.Interfaces.Services
 {

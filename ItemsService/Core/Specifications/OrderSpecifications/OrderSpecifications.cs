@@ -1,10 +1,7 @@
-﻿using OrdersAndItemsService.Core.Models.OrderEntities;
-using OrdersAndItemsService.Core.Specifications;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using Core.Specifications;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
 
 namespace OrdersAndItemsService.Core.Specifications.OrderSpecifications
 {

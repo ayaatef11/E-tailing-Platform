@@ -1,15 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+
+//using Serilog;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using OrdersAndItemsService.Repository.Data;
 using OrdersAndItemsService.API.MiddleWares;
 using OrdersAndItemsService.Services.Settings;
+using Repository.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure DbContext for SQL Server
-builder.Services.AddDbContext<AppDbContext>(options =>
+
+builder.Services.AddDbContext<StoreContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"), sqlOptions =>
     {
@@ -17,7 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     });
 });
 
-// Authorization Policies
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HRDepartmentOnly", policy =>
@@ -61,13 +61,13 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 // Configure Serilog for logging
-var logger = new LoggerConfiguration()
+/*var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .CreateLogger();
 
 builder.Logging.ClearProviders();
-builder.Logging.AddSerilog(logger);
+builder.Logging.AddSerilog(logger);*/
 
 // Cloudinary settings and token lifespan
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
@@ -81,9 +81,8 @@ builder.Services.AddSingleton<ConnectionMultiplexer>(c =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
-var app = builder.Build();
+var app = builder.Build();///
 
-// Middleware configuration
 app.UseMiddleware<ExceptionMiddleWare>();
 
 if (app.Environment.IsDevelopment())
@@ -97,10 +96,9 @@ else
     app.UseExceptionHandler("/error");
 }
 
-// Status code handling for custom error pages
+
 app.UseStatusCodePagesWithReExecute("/error/{0}");
 
-// Enable HTTPS redirection and authentication
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

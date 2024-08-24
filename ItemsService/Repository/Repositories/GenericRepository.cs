@@ -1,9 +1,10 @@
 ﻿
 
-using OrdersAndItemsService.Core.Models;
+
 using OrdersAndItemsService.Core.interfaces.Repositories;
 using OrdersAndItemsService.Core.interfaces.Specifications;
 using Repository.Data;
+using OrdersAndItemsService.Core.Entities;
 
 namespace OrdersAndItemsService.Repository.Repositories
 {

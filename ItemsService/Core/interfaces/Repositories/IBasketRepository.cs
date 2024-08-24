@@ -1,5 +1,5 @@
 ﻿
-using OrdersAndItemsService.Core.Models.BasketEntites;
+using OrdersAndItemsService.Core.Entities.BasketEntites;
 
 namespace OrdersAndItemsService.Core.interfaces.Repositories
 {

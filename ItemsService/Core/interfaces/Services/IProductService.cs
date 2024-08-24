@@ -1,6 +1,6 @@
-﻿using Core.Entities;
+﻿
 using Core.Specifications.ProductSpecifications;
-using OrdersAndItemsService.Core.Models;
+using OrdersAndItemsService.Core.Entities;
 
 namespace Core.Interfaces.Services
 {
