@@ -1,5 +1,6 @@
 ﻿
-using OrdersAndItemsService.Core.Models.OrderEntities;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
+
 
 namespace Repository.Data.Configurations
 {
