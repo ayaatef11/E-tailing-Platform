@@ -14,7 +14,7 @@ namespace UserService.Extensions
             builder = new IdentityBuilder(builder.UserType, builder.Services);
             builder.AddEntityFrameworkStores<IdentityDbContext>();
             builder.AddSignInManager<SignInManager<AppUser>>();
-            services.Authentication();
+            services.AddAuthentication();
             return services;
         }
     }
