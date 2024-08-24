@@ -1,27 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OrdersAndItemsService.Core.Models.BasketEntites;
+﻿
+using OrdersAndItemsService.Core.Models;
 using OrdersAndItemsService.Core.Models.OrderEntities;
-using OrdersAndItemsService.Models;
-using Stripe;
+using System.Reflection;
 
-namespace OrdersAndItemsService.Repository.Data
+namespace Repository.Data
 {
     public class StoreContext : DbContext
     {
-        // Constructor to initialize the DbContext with options
         public StoreContext(DbContextOptions<StoreContext> options) : base(options)
         {
         }
 
-        // DbSets represent tables in the database
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Basket> Baskets { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-
-        // Configure model relationships and constraints (optional)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // -- Old Way   
+            //modelBuilder.ApplyConfiguration(new ProductConfigurations());
+            //modelBuilder.ApplyConfiguration(new ProductBrandConfigurations());
+            //modelBuilder.ApplyConfiguration(new ProductCategoryConfigurations());
+
+            // -- New Way
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
+
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductBrand> ProductBrands { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<OrderDeliveryMethod> OrderDeliveryMethods { get; set; }
     }
 }
