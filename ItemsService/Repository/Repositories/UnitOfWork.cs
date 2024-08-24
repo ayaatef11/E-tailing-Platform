@@ -1,6 +1,7 @@
-﻿/*using Core.Entities;
-using Core.Interfaces.Repositories;
-using OrdersAndItemsService.Models;
+﻿
+using OrdersAndItemsService.Core.interfaces.Repositories;
+using OrdersAndItemsService.Core.Models;
+using OrdersAndItemsService.Repository.Repositories;
 using System.Collections;
 
 namespace Repository
@@ -42,4 +43,4 @@ namespace Repository
             await _storeContext.DisposeAsync();
         }
     }
-}*/
+}
