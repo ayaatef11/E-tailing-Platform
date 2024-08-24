@@ -4,7 +4,7 @@ using WebApplication1.Models;
 
 namespace UserService.Extensions
 {
-    public class IdentityServiceExtension
+    public static  class IdentityServiceExtension
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services)
         {
