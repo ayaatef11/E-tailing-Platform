@@ -1,9 +1,9 @@
-﻿using Core.Entities;
+﻿
+using OrdersAndItemsService.Core.Entities;
 using OrdersAndItemsService.Core.interfaces.Specifications;
-using OrdersAndItemsService.Core.Models;
 using System.Linq.Expressions;
 
-namespace OrdersAndItemsService.Core.Specifications
+namespace Core.Specifications
 {
     public class BaseSpecification<T> : ISpecifications<T> where T : BaseEntity
     {
@@ -25,14 +25,6 @@ namespace OrdersAndItemsService.Core.Specifications
         public int Skip { get; set; }
         public int Take { get; set; }
         public bool IsPaginationEnabled { get; set; }
-
-        public Expression<Func<T, bool>> Criteria { get; }
-
-        public List<Expression<Func<T, object>>> Includes { get; }
-
-        List<Expression<Func<T, object>>> ISpecifications<T>.OrderBy => throw new NotImplementedException();
-
-        public List<Expression<Func<T, object>>> OrderByDesending => throw new NotImplementedException();
 
         public void ApplyPagination(int skip, int take)
         {
