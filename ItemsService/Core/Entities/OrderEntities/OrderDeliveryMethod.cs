@@ -1,6 +1,6 @@
 ﻿
 
-namespace OrdersAndItemsService.Core.Models.OrderEntities
+namespace OrdersAndItemsService.Core.Entities.OrderEntities
 {
     public class OrderDeliveryMethod : BaseEntity
     {
