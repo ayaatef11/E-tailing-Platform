@@ -1,38 +1,54 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using OrdersAndItemsService.Errors;
-using OrdersAndItemsService.Repository.Data;
-namespace OrdersAndItemsService.Controllers
+﻿
+using OrdersAndItemsService.API.Errors;
+using OrdersAndItemsService.Controllers;
+using OrdersAndItemsService.Core.Entities;
+using Repository.Data;
+
+namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BuggyController(AppDbContext context) : ControllerBase
+    public class ErrorsController : BaseApiController
     {
-        private readonly AppDbContext _context = context;
+        private readonly StoreContext _storeContext;
+
+        public ErrorsController(StoreContext storeContext)
+        {
+            _storeContext = storeContext;
+        }
+
 
         [HttpGet("notfound")]
-        public ActionResult GetNotFoundRequest(int id ) {
-            var thing = _context.Items.Find(id);
-            if(thing==null)return NotFound(new ApiResponse(500));
-            return Ok();
+        public ActionResult<Product> GetNotFound(int productId) 
+        {
+            var product = _storeContext.Products.Find(productId);
+            if (product == null)
+                return NotFound(new ApiResponse(404));
+            return Ok(product);
         }
 
-        [HttpGet("serverError")]
+        [HttpGet("badrequest")]
+        public ActionResult GetBadRequest() 
+        {
+            return BadRequest(new ApiResponse(400));
+        }
+
+        [HttpGet("unauthorize")] 
+        public ActionResult GetUnanouthorizeError(int id)
+        {
+            return Unauthorized(new ApiResponse(401));
+        }
+
+        [HttpGet("badrequest/{id}")] 
+        public ActionResult GetBadRequest(int id)
+        {
+            return Ok(new ApiResponse(400));
+        }
+
+        [HttpGet("servererror")] 
         public ActionResult GetServerError(int id)
         {
-            var thing = _context.Items.Find(id);
-            var thingToReturn = thing!.ToString();//if it is null here will create an exception
-            return Ok();
+            var product = _storeContext.Products.Find(id);
+            var productToReturn = product.ToString();///it can't be converted so it will lead to server error 
+            return Ok(productToReturn);
         }
-        [HttpGet("badRequest")]
-        public ActionResult GetBadRequest()
-        {
-            return BadRequest();
-        }
-
-        [HttpGet("badRequest/{id}")]
-        public ActionResult GetNotFound(int id ) { 
-        return Ok(new ApiResponse(400));
-        }
-    }
+}
 }
