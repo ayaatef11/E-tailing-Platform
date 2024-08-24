@@ -1,6 +1,7 @@
 ﻿
+using OrdersAndItemsService.Core.Entities;
 using OrdersAndItemsService.Core.interfaces.Specifications;
-using OrdersAndItemsService.Core.Models;
+
 
 namespace OrdersAndItemsService.Repository.Repositories
 {
