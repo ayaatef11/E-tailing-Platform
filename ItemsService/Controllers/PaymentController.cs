@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿
 using OrdersAndItemsService.API.Errors;
 using OrdersAndItemsService.Controllers;
-using OrdersAndItemsService.Core.Models.BasketEntites;
-using OrdersAndItemsService.Iservice;
+using OrdersAndItemsService.Core.Entities.BasketEntites;
+using OrdersAndItemsService.Core.interfaces.Services;
 
 
 namespace API.Controllers
