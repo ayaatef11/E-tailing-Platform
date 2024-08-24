@@ -1,6 +1,6 @@
 ﻿
-using OrdersAndItemsService.Core.Models;
-using OrdersAndItemsService.Core.Models.OrderEntities;
+using OrdersAndItemsService.Core.Entities;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
 using System.Reflection;
 
 namespace Repository.Data
@@ -13,12 +13,7 @@ namespace Repository.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // -- Old Way   
-            //modelBuilder.ApplyConfiguration(new ProductConfigurations());
-            //modelBuilder.ApplyConfiguration(new ProductBrandConfigurations());
-            //modelBuilder.ApplyConfiguration(new ProductCategoryConfigurations());
-
-            // -- New Way
+           
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
