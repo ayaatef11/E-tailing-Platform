@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using OrdersAndItemsService.Core.interfaces.Specifications;
 
 namespace OrdersAndItemsService.Core.interfaces
 {
