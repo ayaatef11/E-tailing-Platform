@@ -1,7 +1,8 @@
 ﻿
 using Core.Interfaces.Services;
+using OrdersAndItemsService.Core.Entities;
+using OrdersAndItemsService.Core.Entities.OrderEntities;
 using OrdersAndItemsService.Core.interfaces.Repositories;
-using OrdersAndItemsService.Core.Models.OrderEntities;
 using OrdersAndItemsService.Core.Specifications.OrderSpecifications;
 
 namespace Service
