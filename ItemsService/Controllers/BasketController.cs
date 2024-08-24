@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿
+using OrdersAndItemsService.Core.Entities.BasketEntites;
 using OrdersAndItemsService.Core.interfaces.Repositories;
-using OrdersAndItemsService.Core.Models;
+
 
 namespace OrdersAndItemsService.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BasketController : ControllerBase
+ 
+    public class BasketController :BaseApiController
     {
         private readonly IBasketRepository _basketRepository;
 
@@ -16,33 +15,30 @@ namespace OrdersAndItemsService.Controllers
             _basketRepository = basketRepository;
         }
 
-        // GET: api/Basket/{id}
+        
         [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerBasket>> GetBasketById(string id)
+        public async Task<ActionResult<Basket>> GetBasketById(string id)
         {
             var basket = await _basketRepository.GetBasketAsync(id);
 
-            // Return OK with the basket, or an empty basket if null
-            return Ok(basket ?? new CustomerBasket(id));
+            return Ok(basket ?? new Basket(id));
         }
 
-        // POST: api/Basket
+        
         [HttpPost]
-        public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasket basket)
+        public async Task<ActionResult<Basket>> UpdateBasket(Basket basket)
         {
-            var updatedBasket = await _basketRepository.UpdateBasketAsync(basket);
-
-            // Return OK with the updated basket
+            var updatedBasket = await _basketRepository.CreateOrUpdateBasketAsync(basket);
+     
             return Ok(updatedBasket);
         }
 
-        // DELETE: api/Basket/{id}
+      
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBasketAsync(string id)
         {
             await _basketRepository.DeleteBasketAsync(id);
 
-            // Return NoContent indicating successful deletion
             return NoContent();
         }
     }
