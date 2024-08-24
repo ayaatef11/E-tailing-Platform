@@ -1,5 +1,5 @@
 ﻿using Core.Entities;
-using OrdersAndItemsService.Core.interfaces;
+using OrdersAndItemsService.Core.interfaces.Specifications;
 using OrdersAndItemsService.Core.Models;
 using System.Linq.Expressions;
 
