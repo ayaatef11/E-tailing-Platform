@@ -1,4 +1,4 @@
-﻿namespace OrdersAndItemsService.Core.Models
+﻿namespace OrdersAndItemsService.Core.Entities
 {
     public class BaseEntity
     {
