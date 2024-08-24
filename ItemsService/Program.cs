@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using OrdersAndItemsService.MiddleWares;
 using Serilog;
 using Microsoft.OpenApi.Models;
-using OrdersAndItemsService.NewFolder;
 using StackExchange.Redis;
 using OrdersAndItemsService.Repository.Data;
+using OrdersAndItemsService.API.MiddleWares;
+using OrdersAndItemsService.Services.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
