@@ -1,33 +1,42 @@
 ﻿using API.Dtos;
-using AutoMapper;
+
 using Core.Interfaces.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Models;
 using OrdersAndItemsService.API.Errors;
 using OrdersAndItemsService.Controllers;
-using System.Security.Claims;
-using Address = Models.Address;
+using UserService.DTOs;
+using UserService.services;
+using WebApplication1.Models.DTOS.Responses;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Newtonsoft.Json.Linq;
 
 namespace API.Controllers
 {
-    public class AccountController : BaseApiController
+    public class AccountController(UserManager<AppUser> _userManager, IMapper _mapper,
+            SignInManager<AppUser> _signInManager, IAuthService _authService,IEmailService _emailService) : BaseApiController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly IAuthService _authService;
 
-        public AccountController(UserManager<AppUser> userManager, IMapper mapper,
-            SignInManager<AppUser> signInManager, IAuthService authService)
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            _userManager = userManager;
-            _mapper = mapper;
-            _signInManager = signInManager;
-            _authService = authService;
+            if (userId == null || token == null)
+                return BadRequest("Invalid email confirmation request");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return BadRequest("User not found");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+                return Ok("Email confirmed successfully");
+            else
+                return BadRequest("Email confirmation failed");
         }
+
 
         [HttpPost("login")]
         [ProducesResponseType(typeof(AppUserDto), StatusCodes.Status200OK)]
@@ -37,12 +46,28 @@ namespace API.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user is null)
-                return Unauthorized(new ApiResponse(401));
+                return BadRequest(new RegistrationResponseDTO()
+                {
+                    Errors = new List<string>()
+                        {
+                            "Invalid login request"
+                        },
+                    Success = false
+                });
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
             if (result.Succeeded is false)
-                return Unauthorized(new ApiResponse(401));
+                return BadRequest(new RegistrationResponseDTO()
+                {
+                    Errors = new List<string>()
+                        {
+                            "Invalid login request"
+                        },
+                    Success = false
+                });
+            ///var jwtToken = await tokenService.GenerateJwtToken(existingUser);
+           // return Ok(jwtToken);
 
             return Ok(new AppUserDto
             {
@@ -53,30 +78,53 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(typeof(AppUserDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        /*[ProducesResponseType(typeof(AppUserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]*/
         public async Task<ActionResult<AppUserDto>> Register(RegisterDto model)
         {
             if (CheckEmailExist(model.Email).Result.Value)
-                return BadRequest(new ApiValidationErrorResponse() { Errors = new string[] { "This email has already been used" } });
+                return BadRequest(new RegistrationResponseDTO()
+                    {
+                     Errors = new List<string>()
+                        {
+                            "Email is already in use"
+                        },
+                        Success = false
+                    });
 
             var user = new AppUser()
             {
                 DisplayName = model.DisplayName,
                 Email = model.Email,
-                UserName = model.Email.Split('@')[0],
+                UserName =model.Email.Split('@')[0],
                 PhoneNumber = model.PhoneNumber,
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            // Construct confirmation link (this is just an example, update with your actual URL)
+            var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                new { userId = user.Id, token = token }, Request.Scheme);
+
+            // Send email with the confirmation link (you would implement email sending here)
+            await _emailService.SendEmailAsync(user.Email, "Confirm your email",
+                $"Please confirm your email by clicking this link: {confirmationLink}");
+
+            await _authService.AssignRoleToUser(user.Email, "Admin");
 
             if (result.Succeeded is false)
-                return BadRequest(new ApiResponse(400));
-
+                 return BadRequest(new RegistrationResponseDTO()
+                {
+                    Errors = result.Errors.Select(x => x.Description).ToList(),
+                    Success = false
+                });
+           // var jwtToken = await tokenService.GenerateJwtToken(newUser);
+           //return ok(jwttoken);
             return Ok(new AppUserDto
             {
                 DisplayName = user.DisplayName,
-                Email = model.Email,
+                Email = user.Email,
                 Token = await _authService.CreateTokenAsync(user, _userManager)
             });
         }
@@ -86,11 +134,11 @@ namespace API.Controllers
         public async Task<ActionResult<AppUserDto>> GetCurrentUser()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email!);
             return Ok(new AppUserDto()
             {
-                DisplayName = user.DisplayName,
-                Email = user.Email,
+                DisplayName = user!.DisplayName,
+                Email = user.Email!,
                 Token = await _authService.CreateTokenAsync(user, _userManager)
             });
         }
@@ -138,5 +186,39 @@ namespace API.Controllers
         {
             return await _userManager.FindByEmailAsync(email) is not null;
         }
+
+        [HttpPost("logout")]
+        //[ValidateAntiForgeryToken]//Anti-forgery tokens are used to prevent Cross-Site Request
+                                  //Forgery (CSRF) attacks by ensuring that requests are coming from a trusted source.
+        public async Task<IActionResult> Logout(string email)
+        {
+         /* var user=await   _userManager.FindByEmailAsync(email);
+            if (user == null) return BadRequest(new ApiResponse(400));
+            await _userManager.DeleteAsync(user);*/
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok();
+        }
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    return Ok();
+                }
+            }
+
+            return BadRequest(new ApiResponse(500,"Error deleting account"));
+        }
+        //forget password
+        //reset password 
+        //delete account
     }
 }
