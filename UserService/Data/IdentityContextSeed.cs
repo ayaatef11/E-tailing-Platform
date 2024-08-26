@@ -1,25 +1,21 @@
 ﻿
-
-using Microsoft.AspNetCore.Identity;
-using System.Text.Json;
-using WebApplication1.Models;
-
+using Models;
 namespace Repository.Identity
 {
     public class IdentityContextSeed
     {
         public static async Task SeedUsersAsync(UserManager<AppUser> _userManager)
         {
-            if (_userManager.Users.Count() == 0)
+            if (!_userManager.Users.Any())
             {
                 var usersData = File.ReadAllText("../Repository/Identity/DataSeeding/users.json");
                 var users = JsonSerializer.Deserialize<List<AppUser>>(usersData);
 
-                if (users?.Count() > 0)
+                if (users?.Count > 0)
                 {
                     foreach (var user in users)
                     {
-                        await _userManager.CreateAsync(user, "Pa$$w0rd");
+                        await _userManager.CreateAsync(user, "Pa$$w0rd");//this is a default password
                     }
                 }
             }
