@@ -1,7 +1,7 @@
 ﻿
 using OrdersAndItemsService.API.Errors;
 using OrdersAndItemsService.Controllers;
-using OrdersAndItemsService.Core.Entities;
+using OrdersAndItemsService.Core.Entities.ProductEntities;
 using Repository.Data;
 
 namespace API.Controllers
