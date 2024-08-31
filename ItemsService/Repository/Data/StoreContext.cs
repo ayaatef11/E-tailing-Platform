@@ -1,16 +1,11 @@
-﻿
-using OrdersAndItemsService.Core.Entities;
-using OrdersAndItemsService.Core.Entities.OrderEntities;
-using System.Reflection;
+﻿using Core.Entities.OrderEntities;
+using Core.Entities.ProductEntities;
+
 
 namespace Repository.Data
 {
-    public class StoreContext : DbContext
+    public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(options)
     {
-        public StoreContext(DbContextOptions<StoreContext> options) : base(options)
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            
@@ -23,5 +18,6 @@ namespace Repository.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OrderDeliveryMethod> OrderDeliveryMethods { get; set; }
+        public DbSet<ProductOrderItem> ProductOrderItem { get; set; }
     }
 }

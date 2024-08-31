@@ -1,6 +1,5 @@
-﻿
-using OrdersAndItemsService.Core.Entities;
-using OrdersAndItemsService.Core.Entities.OrderEntities;
+﻿using Core.Entities.OrderEntities;
+using Core.Entities.ProductEntities;
 
 
 namespace Repository.Data
@@ -10,13 +9,13 @@ namespace Repository.Data
         public async static Task SeedProductDataAsync(StoreContext _storeContext)
         {
 
-            if (_storeContext.ProductBrands.Count() == 0)
+            if (!_storeContext.ProductBrands.Any())
             {
                 var brandsJSONData = File.ReadAllText("../Repository/Data/DataSeeding/brands.json");
 
                 var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsJSONData);
 
-                if (brands?.Count() > 0)
+                if (brands?.Count > 0)
                 {
                     foreach (var brand in brands)
                     {
@@ -25,13 +24,13 @@ namespace Repository.Data
                 }
             }
 
-            if (_storeContext.ProductCategories.Count() == 0)
+            if (!_storeContext.ProductCategories.Any())
             {
                 var catrgoriesJSONData = File.ReadAllText("../Repository/Data/DataSeeding/categories.json");
 
                 var categories = JsonSerializer.Deserialize<List<ProductCategory>>(catrgoriesJSONData);
 
-                if (categories?.Count() > 0)
+                if (categories?.Count > 0)
                 {
                     foreach (var category in categories)
                     {
@@ -40,13 +39,13 @@ namespace Repository.Data
                 }
             }
 
-            if (_storeContext.Products.Count() == 0)
+            if (!_storeContext.Products.Any())
             {
                 var ProductsJSONData = File.ReadAllText("../Repository/Data/DataSeeding/products.json");
 
                 var products = JsonSerializer.Deserialize<List<Product>>(ProductsJSONData);
 
-                if (products?.Count() > 0)
+                if (products?.Count> 0)
                 {
                     foreach (var product in products)
                     {
@@ -55,12 +54,12 @@ namespace Repository.Data
                 }
             }
 
-            if (_storeContext.OrderDeliveryMethods.Count() == 0)
+            if (!_storeContext.OrderDeliveryMethods.Any())
             {
                 var deliveryMethodsData = File.ReadAllText("../Repository/Data/DataSeeding/delivery.json");
                 var deliveryMethods = JsonSerializer.Deserialize<List<OrderDeliveryMethod>>(deliveryMethodsData);
 
-                if (deliveryMethods?.Count() > 0)
+                if (deliveryMethods?.Count > 0)
                 {
                     foreach (var deliveryMethod in deliveryMethods)
                     {

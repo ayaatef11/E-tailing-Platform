@@ -1,12 +1,19 @@
 ﻿
 
-namespace OrdersAndItemsService.Core.Entities.OrderEntities
+using Core.Entities;
+
+namespace Core.Entities.OrderEntities
 {
+
     public class OrderDeliveryMethod : BaseEntity
     {
+
         public OrderDeliveryMethod()
         {
-
+            Name = string.Empty;
+            Description = string.Empty;
+            Cost = 0;
+            DeliveryTime = string.Empty;
         }
         public OrderDeliveryMethod(string name, string description, decimal cost, string deliveryTime)
         {
@@ -15,10 +22,9 @@ namespace OrdersAndItemsService.Core.Entities.OrderEntities
             Cost = cost;
             DeliveryTime = deliveryTime;
         }
-
-        public string Name { get; set; } // the name of delivery way
+        public string Name { get; set; } 
         public string Description { get; set; }
         public decimal Cost { get; set; }
-        public string DeliveryTime { get; set; } // the time delivery will take to bring the order
+        public string DeliveryTime { get; set; }
     }
 }

@@ -1,7 +1,5 @@
 ﻿
-using OrdersAndItemsService.Core.Entities.OrderEntities;
-using OrdersAndItemsService.Core.Models.OrderEntities;
-
+using Core.Entities.OrderEntities;
 namespace Repository.Data.Configurations
 {
     public class OrderConfigurations : IEntityTypeConfiguration<Order>
@@ -13,12 +11,11 @@ namespace Repository.Data.Configurations
             builder.Property(o => o.Status)
                 .HasConversion(
                 OStatus => OStatus.ToString(),
-                OStatus => (OrderStatus)Enum.Parse(typeof(OrderStatus), OStatus)//convert enum to string to store in the database
-                );//if  was int => then this property will be number (0 | 1 | 2 ..)
-            // and if was string => then this property will be (pending | Payment Succeded | Payment Failed)
+                OStatus => (OrderStatus)Enum.Parse(typeof(OrderStatus), OStatus)
+                );
 
             builder.Property(p => p.SubTotal)
-                .HasColumnType("decimal(18,2)");
+                   .HasColumnType("decimal(18,2)");
 
             builder.HasOne(O => O.DeliveryMethod)
                 .WithMany()

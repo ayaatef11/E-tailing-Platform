@@ -3043,6 +3043,7 @@
         "dependencies": {
           "Core": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.8",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.8",
           "StackExchange.Redis": "2.8.0"
         },
         "compile": {

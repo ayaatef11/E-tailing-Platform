@@ -1,12 +1,11 @@
-﻿
-using OrdersAndItemsService.Core.Entities;
-using OrdersAndItemsService.Core.interfaces.Specifications;
+﻿using Core.Entities;
+using Core.interfaces.Specifications;
 
 
-namespace OrdersAndItemsService.Repository.Repositories
+namespace Repository.Repositories
 {
     public class SpecificationsEvaluator<T> where T : BaseEntity
-    {
+    {//search order or bagination 
         public static IQueryable<T> GetQuery(IQueryable<T> inputQuery, ISpecifications<T> spec)
         {
             var query = inputQuery;
@@ -16,6 +15,7 @@ namespace OrdersAndItemsService.Repository.Repositories
 
             if (spec.OrderBy != null)
                 query = query.OrderBy(spec.OrderBy);
+
             else if (spec.OrderByDesc != null)
                 query = query.OrderByDescending(spec.OrderByDesc);
 

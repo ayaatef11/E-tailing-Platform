@@ -1,7 +1,12 @@
-﻿namespace OrdersAndItemsService.API.Errors
+﻿namespace API.Errors
 {
-    public class ApiValidationErrorResponse
+    public class ApiValidationErrorResponse : ApiResponse
     {
-        public  string[] Errors { get; set; }
+        public ApiValidationErrorResponse() : base(400)
+        {
+
+        }
+
+        public IEnumerable<string> Errors { get; set; } = [];
     }
 }

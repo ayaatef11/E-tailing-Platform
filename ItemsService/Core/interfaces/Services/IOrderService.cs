@@ -1,8 +1,6 @@
-﻿
-using OrdersAndItemsService.Core.Entities.OrderEntities;
+﻿using Core.Entities.OrderEntities;
 
-
-namespace Core.Interfaces.Services
+namespace Core.interfaces.Services
 {
     public interface IOrderService
     {

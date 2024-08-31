@@ -1,8 +1,8 @@
 ﻿
 
-using OrdersAndItemsService.Core.Entities;
+using Core.Entities;
 
-namespace OrdersAndItemsService.Core.interfaces.Repositories
+namespace Core.interfaces.Repositories
 {
     public interface IUnitOfWork : IAsyncDisposable
     {

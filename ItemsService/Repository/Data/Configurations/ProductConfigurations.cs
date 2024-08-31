@@ -1,5 +1,4 @@
-﻿
-using OrdersAndItemsService.Core.Entities;
+﻿using Core.Entities.ProductEntities;
 
 
 namespace Repository.Data.Configurations

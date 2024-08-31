@@ -1,23 +1,11 @@
-﻿using OrdersAndItemsService.API.Errors;
+﻿using API.Errors;
 
-
-
-namespace OrdersAndItemsService.API.MiddleWares
+namespace API.MiddleWares
 {
-    public class ExceptionMiddleWare
+    public class ExceptionMiddleWare(RequestDelegate _next, ILogger<ExceptionMiddleWare> _logger,
+        IHostEnvironment _env)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleWare> _logger;
-        private readonly IHostEnvironment _env;
-
-        public ExceptionMiddleWare(RequestDelegate next, ILogger<ExceptionMiddleWare> logger,
-            IHostEnvironment env)
-        {
-            _next = next;
-            _logger = logger;
-            _env = env;
-        }
-
+        //httpcontext manages requests and responses 
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -30,8 +18,8 @@ namespace OrdersAndItemsService.API.MiddleWares
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                var response = _env.IsDevelopment() ? new ApiException((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace.ToString())
-                    : new ApiException((int)HttpStatusCode.InternalServerError);
+                var response = _env.IsDevelopment() ? new ApiException((int)HttpStatusCode.InternalServerError, ex.Message, ex.StackTrace!.ToString())
+                    : new ApiException((int)HttpStatusCode.InternalServerError);//help quickly identify the root cause 
 
                 var json = JsonSerializer.Serialize(response);
                 await context.Response.WriteAsync(json);

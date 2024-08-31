@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Core.Specifications.ProductSpecifications
 {
+    //attributes can start with small letters but fields must start with capital letters
     public class ProductSpecificationParameters
     {
         private const int MaxPageSize = 10;
 
         private int pageSize = 5;
         public int PageIndex { get; set; } = 1;
-
+/// <summary>
+/// so important 
+/// </summary>
         public int PageSize
         {
             get { return pageSize; }
             set { pageSize = value > MaxPageSize ? pageSize : value; }
         }
-
-        public int? brandId { get; set; }
-        public int? categoryId { get; set; }
-        public string? sort { get; set; }
-        public string? search { get; set; }
+        public int? BrandId { get; set; }
+        public int? CategoryId { get; set; }//filtering by category or brand
+        public string? Sort { get; set; }
+        public string? Search { get; set; }
 
     }
 }

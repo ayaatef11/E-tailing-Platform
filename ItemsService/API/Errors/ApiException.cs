@@ -1,4 +1,4 @@
-﻿namespace OrdersAndItemsService.API.Errors
+﻿namespace API.Errors
 {
     public class ApiException(int statusCode, string message = "", string details = "") : ApiResponse(statusCode, message)
     {

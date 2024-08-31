@@ -1,9 +1,6 @@
-﻿
+﻿using Core.Entities.OrderEntities;
 
-using Core.Specifications;
-using OrdersAndItemsService.Core.Entities.OrderEntities;
-
-namespace OrdersAndItemsService.Core.Specifications.OrderSpecifications
+namespace Core.Specifications.OrderSpecifications
 {
     public class OrderSpecifications : BaseSpecification<Order>
     {

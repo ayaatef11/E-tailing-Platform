@@ -1,17 +1,18 @@
 ﻿
 
 
-using OrdersAndItemsService.Core.interfaces.Repositories;
-using OrdersAndItemsService.Core.interfaces.Specifications;
+using Core.interfaces.Repositories;
+using Core.interfaces.Specifications;
 using Repository.Data;
-using OrdersAndItemsService.Core.Entities;
+using Core.Entities;
 
-namespace OrdersAndItemsService.Repository.Repositories
+namespace Repository.Repositories
 {
     public class GenericRepository<T>(StoreContext storeContext) : IGenericRepository<T> where T : BaseEntity
     {
         public async Task<IReadOnlyList<T>> GetAllAsync() => await storeContext.Set<T>().ToListAsync();
         public async Task<T?> GetByIdAsync(int id) => await storeContext.Set<T>().FindAsync(id);
+        ///
         public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecifications<T> spec)
         {
             return await SpecificationsEvaluator<T>.GetQuery(storeContext.Set<T>(), spec).ToListAsync();
@@ -24,6 +25,8 @@ namespace OrdersAndItemsService.Repository.Repositories
         {
             return await SpecificationsEvaluator<T>.GetQuery(storeContext.Set<T>(), spec).FirstOrDefaultAsync();
         }
+        /// <summary>
+        /// 
         public async Task AddAsync(T entity)
         {
             await storeContext.Set<T>().AddAsync(entity);

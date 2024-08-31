@@ -1,11 +1,10 @@
 ﻿
 using API.Dtos;
-using AutoMapper;
-using OrdersAndItemsService.Core.Entities;
+using Core.Entities.ProductEntities;
 
 namespace API.Helpers
 {
-    public class ProductPictureUrlResolver : IValueResolver<Product, ProductToReturnDto, string>
+    public class ProductPictureUrlResolver : IValueResolver<Product, ProductToReturnDto, string>//source ,destination ,tdest member
     {
         private readonly IConfiguration _configuration;
 
@@ -13,7 +12,7 @@ namespace API.Helpers
         {
             _configuration = configuration;
         }
-
+        //overriden
         public string Resolve(Product source, ProductToReturnDto destination, string destMember, ResolutionContext context)
         {
             if (!string.IsNullOrEmpty(source.PictureUrl))

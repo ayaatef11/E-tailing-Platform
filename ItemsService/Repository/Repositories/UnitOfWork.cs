@@ -1,24 +1,18 @@
 ﻿
-using OrdersAndItemsService.Core.Entities;
-using OrdersAndItemsService.Core.interfaces.Repositories;
-using OrdersAndItemsService.Core.Models;
-using OrdersAndItemsService.Repository.Repositories;
-using System.Collections;
+using Core.Entities;
+using Core.interfaces.Repositories;
 
-namespace Repository
+
+
+namespace Repository.Repositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork(DbContext storeContext) : IUnitOfWork
     {
-        private readonly DbContext _storeContext;
-        private Hashtable _repositories;
-
-        public UnitOfWork(DbContext storeContext)
-        {
-            _storeContext = storeContext;
-            _repositories = new Hashtable();
-        }
-
-        public IGenericRepository<T> Repository<T>() where T : BaseEntity
+        private readonly DbContext _storeContext = storeContext;
+        private readonly Hashtable _repositories = [];
+        private bool _disposed = false;
+       //
+        public IGenericRepository<T> Repository<T>() where T : BaseEntity//generic function
         {
             var key = typeof(T).Name;
 
@@ -34,14 +28,47 @@ namespace Repository
             return (GenericRepository<T>)_repositories[key];
         }
 
-        public async Task<int> CompleteAsync()
-        {
-            return await _storeContext.SaveChangesAsync();
-        }
+        //
+        public async Task<int> CompleteAsync() => await _storeContext.SaveChangesAsync();
+
 
         public async ValueTask DisposeAsync()
         {
-            await _storeContext.DisposeAsync();
+            await DisposeAsyncCore();
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual async ValueTask DisposeAsyncCore()
+        {
+            if (_storeContext != null)
+            {
+                await _storeContext.DisposeAsync();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _storeContext?.Dispose();//if not null then dispose 
+                }
+
+                _disposed = true;
+            }
+        }
+
+        ~UnitOfWork()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(false);
         }
     }
 }

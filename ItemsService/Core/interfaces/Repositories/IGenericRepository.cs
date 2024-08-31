@@ -1,9 +1,8 @@
 ﻿
-using OrdersAndItemsService.Core.Entities;
-using OrdersAndItemsService.Core.interfaces.Specifications;
-using OrdersAndItemsService.Core.Models;
+using Core.Entities;
+using Core.interfaces.Specifications;
 
-namespace OrdersAndItemsService.Core.interfaces.Repositories
+namespace Core.interfaces.Repositories
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {

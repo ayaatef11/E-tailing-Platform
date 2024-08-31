@@ -1,6 +1,4 @@
-﻿
-
-using OrdersAndItemsService.Core.Entities;
+﻿using Core.Entities.ProductEntities;
 
 
 

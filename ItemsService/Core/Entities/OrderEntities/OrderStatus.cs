@@ -1,14 +1,14 @@
 ﻿using System.Runtime.Serialization;
 
-namespace OrdersAndItemsService.Core.Models.OrderEntities
+namespace Core.Entities.OrderEntities
 {
     public enum OrderStatus
     {
-        [EnumMember(Value = "Pending")]
-        pending,
+        [EnumMember(Value = "Pending")]//custom name when serialization or deserialization
+        Pending,
         [EnumMember(Value = "Payment Succeeded")]
-        paymentSucceeded,
+        PaymentSucceeded,
         [EnumMember(Value = "Payment Failed")]
-        paymentFailed
+        PaymentFailed
     }
 }

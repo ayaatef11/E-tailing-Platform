@@ -1,7 +1,7 @@
 ﻿
-using OrdersAndItemsService.Core.Entities.BasketEntites;
+using Core.Entities.BasketEntites;
 
-namespace OrdersAndItemsService.Core.interfaces.Repositories
+namespace Core.interfaces.Repositories
 {
     public interface IBasketRepository
     {

@@ -1,12 +1,10 @@
-﻿
-
-namespace OrdersAndItemsService.Core.Entities.BasketEntites
+﻿namespace Core.Entities.BasketEntites
 {
     public class Basket
     {
         public Basket()
         {
-            
+
         }
         public Basket(string id)
         {

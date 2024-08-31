@@ -1,8 +1,7 @@
-﻿
+﻿using Core.Entities.ProductEntities;
 using Core.Specifications.ProductSpecifications;
-using OrdersAndItemsService.Core.Entities;
 
-namespace Core.Interfaces.Services
+namespace Core.interfaces.Services
 {
     public interface IProductService
     {
@@ -12,4 +11,4 @@ namespace Core.Interfaces.Services
         Task<IReadOnlyList<ProductBrand>> GetBrandsAsync();
         Task<IReadOnlyList<ProductCategory>> GetCategoriesAsync();
     }
-} 
+}
