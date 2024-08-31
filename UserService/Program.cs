@@ -1,28 +1,44 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
-using WebApplication1.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using WebApplication1.Models;
+
 using UserService.Exceptions;
 using UserService.Data;
+using Models;
+using UserService.services;
+using UserService.DTOs.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Data;
+//using Stripe;
+//using Stripe;
+//using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddIdentity();
+builder.Services.AddEndpointsApiExplorer();//This method registers services required for discovering and describing API endpoints within the application. It is part of the configuration for setting up API documentation tools, such as Swagger.
 builder.Services.AddSwaggerGen();
-var jwtConfig=builder.Configuration.GetSection("JwtConfig").Get<jwtConfig>();
-builder.Services.AddSingleton(jwtConfig);
+builder.Services.AddLogging();
+builder.Services.AddDbContext<IdentityContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityContext")));
 
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 10;
+    options.Password.RequiredUniqueChars = 3;
+
+    //options.SignIn.RequireConfirmedEmail = true;
+})
+.AddEntityFrameworkStores<IdentityContext>()//configures the Identity system to use Entity Framework Core to store and retrieve identity data.
+.AddDefaultTokenProviders();
+builder.Services.AddSingleton<EmailConfiguration>();
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<jwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+var jwtConfig = builder.Configuration.GetSection("JwtConfig").Get<jwtConfig>();
 var key = Encoding.ASCII.GetBytes(jwtConfig.Secret);
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
+})
+.AddJwtBearer(x =>
 {
     x.RequireHttpsMetadata = false;
     x.SaveToken = true;
@@ -31,56 +47,66 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
-        ValidIssuer = jwtConfig.Issuer,
         ValidateAudience = true,
-        ValidAudience = jwtConfig.Audience,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
+        ValidIssuer = jwtConfig.Issuer,
+        ValidAudience = jwtConfig.Audience
     };
 });
 
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-{
-    options.Password.RequiredLength = 10;
-    options.Password.RequiredUniqueChars = 3;
+builder.Services.AddAuthentication()
+    .AddGoogle(o =>
+    {
+        IConfigurationSection gg = builder.Configuration.GetSection("Google");
+        o.ClientId = gg["ClientId"];
+        o.ClientSecret = gg["ClientSecret"];
+    });
 
-    options.SignIn.RequireConfirmedEmail = true;
-})
-.AddEntityFrameworkStores<IdentityContext>()
-.AddDefaultTokenProviders();
-
-builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
-o.TokenLifespan = TimeSpan.FromHours(5));
-builder.Services.AddIdentity<AppUser, IdentityRole>(o =>
-{
-    o.Password.RequiredLength = 10;
-    o.Password.RequiredUniqueChars = 3;
-    o.SignIn.RequireConfirmedEmail = true;
-}).AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
-
-//builder.Services.Configure<jwtConfig>(builder.Configuration.GetSection("jwtConfig"));
-
-//var key = Encoding.ASCII.GetBytes(builder.Configuration["jwtConfig:Secret"]);
-/*builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
-    options.AddPolicy("ViewReportsPolicy", policy => policy.RequireClaim("Permission", "ViewReports"));
-    options.AddPolicy("EditReportsPolicy", policy => policy.RequireClaim("Permission", "EditReports"));
-});*/
-
+// --> Bring Object Of IdentityContext For Update His Migration
+//var _identiyContext = builder.Services.GetRequiredService<IdentityContext>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddExceptionHandler<AppExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped<ITokenService,TokenService>();
+builder.Services.AddSingleton<jwtConfig>();
+
+builder.Services.AddSingleton<TokenValidationParameters>();
+
+builder.Services.AddSingleton<IPhotoService,CloudinaryService> ();
+
+
+// Migrate IdentityContext
+//await _identiyContext.Database.MigrateAsync();
+// Seeding Data For IdentityDbContext
+// -- but this seeding function create users, so it need to take object from UserManager not IdentityContext
+// -- So we will add dependancy injection then ask clr to create object from UserManager
+//var _userManager = builder.Services.GetRequiredService<UserManager<AppUser>>();
+//await IdentityContextSeed.SeedUsersAsync(_userManager);
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-XSRF-TOKEN"; 
+    options.Cookie.Name = "MyApp.Antiforgery"; 
+    options.Cookie.HttpOnly = true; 
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; 
+    options.Cookie.MaxAge = TimeSpan.FromMinutes(30); 
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseExceptionHandler(_ => { });
+//app.UseExceptionHandler(_ => { });
 app.UseHttpsRedirection();
-
+app.UseAuthentication();//to add claims identity
 app.UseAuthorization();
 
 app.MapControllers();

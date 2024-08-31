@@ -1,27 +1,17 @@
 ﻿
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
+using Models.DTOS.Requests;
+using Models.DTOS.Responses;
+using UserService.services;
 
 namespace Controllers
 {
     [Route("api/Roles")]
     [ApiController]
-    public class setUpController : ControllerBase
+    public class SetUpController( UserManager<IdentityUser> _userManager, RoleManager<IdentityRole> _roleManager, ILogger<SetUpController> _logger,IPhotoService _cloudinaryService,TokenService tokenService)
+ : ControllerBase
     {
-        private readonly DbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly ILogger<setUpController> _logger;
-
-        public setUpController(DbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<setUpController> logger)
-        {
-            _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _logger = logger;
-        }
-
+  
         [HttpGet]
         public IActionResult GetAllRoles()
         {
@@ -59,8 +49,7 @@ namespace Controllers
             return BadRequest(new { error = "Role already exists" });
         }
 
-        [HttpGet]
-        [Route("GetAllUsers")]
+        [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -157,5 +146,39 @@ namespace Controllers
                 });
             }
         }
+        [HttpGet("uploadfiles")]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            var result = await _cloudinaryService.UploadImageAsync(file);
+            return Ok(result);
+        }
+
+        [HttpGet("RefreshTokens")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequests tokenRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await tokenService.VerifyToken(tokenRequest);
+
+                if (result == null)
+                {
+                    return BadRequest(new RegistrationResponseDTO()
+                    {
+                        Errors =
+                            [ "invalid tokens "],
+                        Success = false
+                    });
+                }
+                return Ok(result);
+            }
+
+            return BadRequest(new RegistrationResponseDTO()
+            {
+                Errors =
+                [ "Invalid payload" ],
+                Success = false
+            });
+        }
+
     }
 }

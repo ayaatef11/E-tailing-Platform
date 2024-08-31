@@ -1,6 +1,5 @@
 ﻿
 using Models;
-using UserService.Models;
 
 namespace UserService.Data
 {
@@ -20,7 +19,7 @@ namespace UserService.Data
                  entity.ToTable("AspNetUsers");
              });*/
             builder.Entity<RefreshTokens>()
-       .HasOne(rt => rt.User)             // Configure one-to-one or one-to-many relationship
+       .HasOne(rt => rt.User)             // Configure one-to- one or one-to-many relationship
        .WithMany()                        // If the User can have multiple RefreshTokens
        .HasForeignKey(rt => rt.AppUserId)    // Set foreign key property
        .OnDelete(DeleteBehavior.Cascade); // Define delete behavior (e.g., delete tokens if user is deleted)

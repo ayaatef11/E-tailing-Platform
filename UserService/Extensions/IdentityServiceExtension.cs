@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using WebApplication1.Models;
+﻿
+using Models;
 
 namespace UserService.Extensions
 {
     public static  class IdentityServiceExtension
     {
-        public static IServiceCollection AddIdentityServices(this IServiceCollection services)
+        public static IServiceCollection AddIdentity(this IServiceCollection services)
         {
 
             var builder = services.AddIdentityCore<AppUser>();
@@ -16,6 +15,7 @@ namespace UserService.Extensions
             builder.AddSignInManager<SignInManager<AppUser>>();
             services.AddAuthentication();
             return services;
+       
         }
     }
 }

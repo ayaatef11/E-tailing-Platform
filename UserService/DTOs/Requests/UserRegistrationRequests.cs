@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Models.DTOS.Requests
+﻿namespace Models.DTOS.Requests
 {
     public class UserRegistrationRequests
     {

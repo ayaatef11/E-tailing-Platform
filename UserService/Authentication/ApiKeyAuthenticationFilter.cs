@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using UserService.DTOs.Configuration;
 
-namespace WebApplication1.Authentication
+namespace Authentication
 {
     public class ApiKeyAuthenticationFilter:IAsyncAuthorizationFilter
     {
@@ -15,15 +14,13 @@ namespace WebApplication1.Authentication
             var providedKey = context.HttpContext.Request.Headers[AuthConfig.ApiKeyHeader].FirstOrDefault();
             var isValid= IsValidApiKey( providedKey );
             if (!isValid)
-            {
-                // Return 401 Unauthorized if the API key is invalid
+            {           
                  context.Result =  new UnauthorizedObjectResult("Invalid Authentication");
-                return;
+               
             }
-            // If valid, proceed with the request (do nothing here)
         }
 
-        public bool IsValidApiKey(string providedApiKey)
+        private  bool IsValidApiKey(string providedApiKey)
         {
             if (string.IsNullOrEmpty(providedApiKey)) return false;
 

@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Models.DTOS.Responses
+﻿namespace Models.DTOS.Responses
 {
     public class RegistrationResponseDTO
     {
